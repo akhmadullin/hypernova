@@ -17,7 +17,14 @@ export default (config, isClosing) => (req, res) => {
       if (isClosing()) {
         logger.info('Ending request when closing!');
       }
-      return res.status(manager.statusCode).json(manager.getResults()).end();
+      const { results } = manager.getResults();
+      const result = results[0];
+
+      if (result.error) {
+        return res.status(500).send('ssr error').end();
+      }
+
+      return res.status(result.statusCode).send(result.html).end();
     })
     .catch(() => res.status(manager.statusCode).end());
 };
