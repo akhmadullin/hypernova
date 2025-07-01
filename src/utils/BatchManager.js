@@ -139,14 +139,14 @@ class BatchManager {
    * Renders a specific job (from a job token). The end result is applied to the corresponding
    * job context. Additionally, duration is calculated.
    */
-  render(token) {
+  async render(token) {
     const start = now();
     const context = this.jobContexts[token];
     const { name } = context;
 
     const { getComponent } = this.config;
 
-    const result = getComponent(name, context);
+    const result = await getComponent(name, context);
 
     return Promise.resolve(result).then((renderFn) => {
       // ensure that we have this component registered
